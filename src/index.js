@@ -7,14 +7,24 @@ const http = require('http')
 const port = process.env.PORT || 3000 // setting the port
 let app = express();
 let server = http.createServer(app)
-let io = socketIO(server)
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/client-side.html");
-});
+let io = socketIO(server)
 
 // make a connection with the user from server side
 io.on('connection', (socket) => {
-    console.log('New user connected');
+    console.log('New user connected',socket.id);
 });
-server.listen(port);
+
+app.use(express.static("./public"))
+
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "./public/index.html");
+});
+
+
+
+
+server.listen(port,()=>{
+    console.log('listening on port no. ',port)
+});
